@@ -32,10 +32,8 @@ public class InitController {
     public @ResponseBody JSONObject getWxInfo(@RequestBody Map<String,Object> params,HttpServletRequest request) {
     	JSONObject jsonObject = new JSONObject();
     	String code = (String) params.get("code");
-    	String appId="wxb22aba87cf707a20";
-    	String secret="daf3cb960bff96ff3432486983a6ce0e";   //航天生鲜配送平台小程序
-//    	String appId="wx6fff2ac4e4144e7b";
-//    	String secret="018e0375b1ff44baf4ead4e752cf0b36";//杜总，小程序
+    	String appId="";
+    	String secret="";   //航天生鲜配送平台小程序
     	String result="1";
     	try {
 	    	String address = "https://api.weixin.qq.com/sns/jscode2session";
