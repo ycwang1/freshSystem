@@ -221,4 +221,52 @@ public class OrderController {
 		
 		return jsonObject;
 	}
+	/**
+	 * 根据订单状态(可以是多个订单状态)查找订单
+	 * @param params  
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="selectUserOrderByOrderStatus", method = RequestMethod.POST)
+	public @ResponseBody JSONObject selectUserOrderByOrderStatus(@RequestBody Map<String, Object> params,HttpServletRequest request){
+		SessionUtil sessionUtil=SessionUtil.getInstance();
+		HttpSession session = sessionUtil.getSession(request);
+		if(session==null){
+			session = request.getSession();
+		}
+		JSONObject jsonObject = new JSONObject();
+		Integer currentPage= (Integer)params.get("currentPage");
+    	Integer user_id= (Integer)params.get("user_id");
+    	if(user_id==0){
+    		User user=(User) session.getAttribute("user");
+			user_id=user.getId();
+    	}
+    	List str= (List)params.get("status");
+    	//Integer status=Integer.parseInt(str);
+    	
+		PageBean<OrderQuery> pageBean =orderService.selectUserOrderByOrderStatus(currentPage, str,user_id);
+		List<OrderQuery> list=pageBean.getLists();
+		String list1=JSON.toJSONString(list);
+    	jsonObject.put("list1",list1);
+		return jsonObject;
+	}
+	/**
+	 * 通过账单状态状态查询某个用户待支付订单，，订单状态为已完成
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value="selectUserUnPayOrder", method = RequestMethod.POST)
+	public @ResponseBody JSONObject selectUserUnPayOrder(@RequestBody Map<String, Object> params){
+		JSONObject jsonObject = new JSONObject();
+		
+		Integer currentPage= (Integer)params.get("currentPage");
+		Integer user_id= (Integer)params.get("user_id");
+ 	
+		PageBean<OrderQuery> pageBean =orderService.selectUserUnPayOrder(currentPage, user_id);
+		List<OrderQuery> list=pageBean.getLists();
+		String list1=JSON.toJSONString(list);
+    	jsonObject.put("list1",list1);
+    		
+		return jsonObject;
+	}
 }

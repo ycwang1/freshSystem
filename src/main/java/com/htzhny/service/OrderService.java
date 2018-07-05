@@ -22,5 +22,9 @@ public interface OrderService{
 	public Integer updatePayStatusByUser(Integer user_id);
 	public List<OrderQuery> selectUserOrderByStatusNoPage(Integer status,Integer user_id);
 	public List<OrderQuery> selectUserOrder(Integer user_id);
+	public PageBean<OrderQuery> selectUserOrderByOrderStatus(Integer currentPage,List status,Integer user_id);
+	
+	public Integer selectUserUnPayOrderCount(Integer user_id);
+	public PageBean<OrderQuery> selectUserUnPayOrder(Integer currentPage, Integer user_id);
 	
 }

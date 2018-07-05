@@ -3,9 +3,10 @@ package com.htzhny.service.impl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,11 @@ import com.htzhny.dao.BillDao;
 import com.htzhny.dao.OrderDao;
 import com.htzhny.dao.OrderLogDao;
 import com.htzhny.entity.Bill;
-import com.htzhny.entity.Goods;
 import com.htzhny.entity.Order;
 import com.htzhny.entity.OrderLog;
 import com.htzhny.entity.OrderQuery;
 import com.htzhny.entity.PageBean;
 import com.htzhny.service.OrderService;
-import com.htzhny.service.Order_logService;
 
 
 
@@ -209,6 +208,67 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public List<OrderQuery> selectUserOrder(Integer user_id) {
 		return orderDao.selectUserOrder(user_id);
+	}
+
+	@Override
+	public PageBean<OrderQuery> selectUserOrderByOrderStatus(Integer currentPage, List status, Integer user_id) {
+		// TODO Auto-generated method stub
+		PageBean<OrderQuery> pageBean=new PageBean<OrderQuery>();
+		//封装当前页数
+		pageBean.setCurrPage(currentPage);
+		//每页显示的数据
+//		int pageSize=2;
+		pageBean.setPageSize(pageSize);
+		//封装总记录数
+		Map acountMap = new HashMap();
+		acountMap.put("user_id", user_id);
+		acountMap.put("status", status);
+		int totalCount = orderDao.selectCountByOrderStatus(acountMap);
+	    pageBean.setTotalCount(totalCount);
+	    //封装总页数
+        double tc = totalCount;
+        Double num =Math.ceil(tc/pageSize);//向上取整
+        pageBean.setTotalPage(num.intValue());
+        Integer start=(currentPage-1)*pageSize;
+        Integer size=pageBean.getPageSize();
+        //封装每页显示的数据
+        Map map = new HashMap();
+        map.put("start", start);
+        map.put("size", size);
+        map.put("status", status);
+        map.put("user_id", user_id);
+        List<OrderQuery> lists = orderDao.selectUserOrderByOrderStatus(map);
+        pageBean.setLists(lists);
+		return pageBean;
+	}
+
+	@Override
+	public Integer selectUserUnPayOrderCount(Integer user_id) {
+		// TODO Auto-generated method stub
+		return orderDao.selectUserUnPayOrderCount(user_id);
+	}
+
+	@Override
+	public PageBean<OrderQuery> selectUserUnPayOrder(Integer currentPage, Integer user_id) {
+		PageBean<OrderQuery> pageBean=new PageBean<OrderQuery>();
+		//封装当前页数
+		pageBean.setCurrPage(currentPage);
+		//每页显示的数据
+//		int pageSize=2;
+		pageBean.setPageSize(pageSize);
+		//封装总记录数
+		int totalCount = orderDao.selectUserUnPayOrderCount(user_id);
+	    pageBean.setTotalCount(totalCount);
+	    //封装总页数
+        double tc = totalCount;
+        Double num =Math.ceil(tc/pageSize);//向上取整
+        pageBean.setTotalPage(num.intValue());
+        Integer start=(currentPage-1)*pageSize;
+        Integer size=pageBean.getPageSize();
+        //封装每页显示的数据
+        List<OrderQuery> lists = orderDao.selectUserUnPayOrder(start, size, user_id);
+        pageBean.setLists(lists);
+		return pageBean;
 	}
 
 

@@ -1,6 +1,7 @@
 package com.htzhny.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.htzhny.entity.Order;
 import com.htzhny.entity.OrderQuery;
@@ -22,5 +23,10 @@ public interface OrderDao {
 	public Integer updatePayStatusByUser(Integer user_id);
 	public List<OrderQuery> selectUserOrderByStatusNoPage(Integer status,Integer user_id);
 	public List<OrderQuery> selectUserOrder(Integer user_id);
-	public Integer updateBillStatus(Integer bill_status);
+	public Integer updateBillStatus(Integer bill_status); 
+	public List<OrderQuery> selectUserOrderByOrderStatus( Map map);
+	public Integer selectCountByOrderStatus(Map map);
+	
+	public List<OrderQuery> selectUserUnPayOrder(Integer start,Integer size,Integer user_id);
+	public Integer selectUserUnPayOrderCount(Integer user_id);
 }

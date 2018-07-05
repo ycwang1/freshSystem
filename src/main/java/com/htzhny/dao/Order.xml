@@ -68,4 +68,23 @@
 	<update id="updateBillStatus">
 		update t_order set bill_status=#{bill_status} where bill_status=1
 	</update>
+	<select id="selectUserOrderByOrderStatus" resultMap="OrderQuery">
+		select t_order.*,user.user_company from t_order join user on t_order.user_id=user.id where order_status in 
+			<foreach collection="status" index="index" item="item" open="(" separator="," close=")">
+	               #{item}       
+	       	</foreach>
+		 and user_id = #{user_id} order by order_status,id limit #{start},#{size} 
+	</select>
+	<select id="selectCountByOrderStatus" resultType="java.lang.Integer">
+		select count(1) from t_order join user on t_order.user_id=user.id where order_status in
+			<foreach collection="status" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+       		</foreach> and user_id = #{user_id}  
+	</select>
+	<select id="selectUserUnPayOrder" resultMap="OrderQuery">
+		select t_order.*,user.user_company from t_order join user on t_order.user_id=user.id where bill_status !=3 and order_status=6 and user_id=#{2} order by id limit #{0},#{1}
+	</select>
+	<select id="selectUserUnPayOrderCount" resultType="java.lang.Integer">
+		select count(1) from t_order join user on t_order.user_id=user.id where bill_status !=3 and order_status=6 and user_id=#{3}
+	</select>
 </mapper>
